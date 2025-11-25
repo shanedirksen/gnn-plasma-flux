@@ -1,0 +1,28 @@
+# TODO: Configuration file for experiments
+
+# Physical parameters
+N: 128                # Grid cells
+L: 6.28318530718      # Domain length (2*pi)
+dt: 0.01              # Time step
+n0: 1.0               # Background density
+
+# Data generation
+num_trajectories: 20
+fine_resolution: 512
+num_timesteps: 1000
+
+# GNN model
+node_features: 4
+hidden_dim: 64
+num_layers: 3
+stencil_radius: 1
+
+# Training
+batch_size: 32
+learning_rate: 0.001
+num_epochs: 100
+continuity_weight: 0.1
+
+# Evaluation
+test_trajectories: 5
+rollout_steps: 2000
