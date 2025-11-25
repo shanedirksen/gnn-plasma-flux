@@ -1,4 +1,4 @@
-# GNN Plasma Flux - Class Project
+# GNN Plasma Flux
 
 **Authors:** Yeganeh Aghamohammadi, Jingtao Xia, Shane Dirksen, Frank Zhong
 
