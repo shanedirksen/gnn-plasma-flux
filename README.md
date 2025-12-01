@@ -4,7 +4,7 @@
 
 ## Overview
 
-Hybrid plasma simulator: Keep classical solver (time-stepping + Poisson), replace only the numerical flux with a GNN.
+Hybrid plasma simulator: Keep classical solver (time-stepping + Poisson), replace only the numerical flux with a GNN
 
 ## Project Structure
 
