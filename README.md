@@ -1,71 +1,81 @@
-# GNN Plasma Flux
+# Hybrid Flux GNN
 
-**Authors:** Yeganeh Aghamohammadi, Jingtao Xia, Shane Dirksen, Frank Zhong
+This repo is a minimal working scaffold for a **hybrid PDE solver**:
+we keep a classical finite-volume time integrator, but replace the
+numerical flux function with a small **graph neural network**.
 
-## Overview
+Right now, the PDE is a simple 1D linear advection equation, but the
+scaffolding (data shapes, graph builder, GNN interface, hybrid loop)
+matches what we would use for a 1D fluid–Poisson plasma model.
 
-Hybrid plasma simulator: Keep classical solver (time-stepping + Poisson), replace only the numerical flux with a GNN
+## Files
 
-## Project Structure
+- `baseline_solver.py`  
+  Simple 1D finite-volume solver with periodic BC. Exposes:
+  - `BaselineSolver.initial_condition(...)`
+  - `BaselineSolver.run(u0, n_steps, record_flux=True)`  
+  Returns both states and interface fluxes.
 
-```
-gnn-plasma-flux/
-├── src/
-│   ├── baseline_solver.py      # TODO: Classical finite-volume solver
-│   ├── poisson_solver.py       # TODO: FFT Poisson solver
-│   ├── generate_data.py        # TODO: Generate training dataset
-│   ├── graph_constructor.py    # TODO: Build graphs from 1D grid
-│   ├── flux_gnn.py             # TODO: GNN model for flux prediction
-│   ├── train.py                # TODO: Training loop
-│   ├── hybrid_solver.py        # TODO: Hybrid integrator
-│   └── evaluate.py             # TODO: Metrics and plots
-├── configs/
-│   └── default.yaml            # TODO: Hyperparameters
-├── scripts/
-│   ├── run_baseline.py         # TODO: Run classical solver
-│   └── run_training.py         # TODO: Train GNN
-├── requirements.txt
-└── README.md
-```
+- `generate_data.py`  
+  Uses `BaselineSolver` to generate a dataset of:
+  - `states` [num_samples, nx]
+  - `fluxes` [num_samples, nx]
+  - `x` [nx] (cell centers)  
+  Saves them in `data/dataset.npz`.
 
-## Installation
+- `graph_constructor.py`  
+  Builds a 1D chain graph:
+  - `build_chain_graph(state, x)` -> `(node_features, edge_index)`  
+  where:
+  - `node_features` [nx, 2] = `[state_value, x_coord]`
+  - `edge_index` [2, 2*nx] = directed edges i↔i+1 (periodic)
 
-```bash
-pip install -r requirements.txt
-```
+- `flux_gnn.py`  
+  Pure PyTorch `FluxGNN`:
+  - Performs simple message passing.
+  - Reads out a scalar flux per directed edge.
 
-## Implementation Steps
+- `train.py`  
+  Training script:
+  - Loads `data/dataset.npz` as `FluxDataset`.
+  - For each time step, builds a chain graph and trains `FluxGNN`
+    to match the baseline fluxes.
+  - Saves weights to `checkpoints/flux_gnn.pt`.
 
-### Step 1: Baseline Solver
-- 1D fluid-Poisson equations (continuity + momentum + Poisson)
-- Finite-volume discretization, Lax-Friedrichs flux
-- RK2 time integration
+- `hybrid_solver.py`  
+  `HybridSolver` wraps:
+  - A baseline grid and time step (same as `BaselineSolver`).
+  - A trained `FluxGNN` that predicts fluxes.
+  - A `run(u0, n_steps)` method that advances the solution using
+    learned fluxes but classical finite-volume updates.
 
-### Step 2: Data Generation
-- 10-20 initial conditions (sinusoidal perturbations)
-- Run at 512 cells, save (nᵢ, uᵢ, Eᵢ) and fluxes Fᵢ₊₁/₂
+- `evaluate.py`  
+  Runs both `BaselineSolver` and `HybridSolver` from the same
+  initial condition, prints MSE between trajectories, and
+  optionally saves a `comparison.png` plot.
 
-### Step 3: Graph Construction
-- PyTorch Geometric graph from 1D grid
-- Node features: [n, u, E, x]
+## How to run
 
-### Step 4: GNN Model
-- Message-passing network (2-3 layers)
-- Edge readout → flux prediction
+1. **Install dependencies**
 
-### Step 5: Training
-- Loss: MSE + continuity penalty
-- Adam optimizer
+   ```bash
+   pip install numpy torch matplotlib
+2. **Generate data
 
-### Step 6: Hybrid Solver
-- Classical Poisson + time stepping
-- GNN flux computation
+   ```bash
+   python generate_data.py
+3. **Train the flux GNN
 
-### Step 7: Evaluation
-- L² error, charge conservation, stability
+   ```bash
+    python train.py
+You should see loss values per epoch and then:
 
-## References
+   ```bash
+    Saved trained model to checkpoints/flux_gnn.pt
+4. **Run hybrid evaluation
 
-1. Carvalho et al. (2024) - GNN for 1D plasma
-2. Kim & Kang (2024) - Flux FNO
-3. Pfaff et al. (2020) - Learning mesh-based simulation
+   ```bash
+python evaluate.py
+
+
+   
