@@ -36,6 +36,9 @@ def main():
     # Optional visualization
     try:
         import matplotlib.pyplot as plt
+        import os
+        os.makedirs("results/visualizations", exist_ok=True)
+        
         x = baseline.x
         plt.figure()
         plt.plot(x, states_b[-1], label="Baseline final", linewidth=2)
@@ -45,8 +48,8 @@ def main():
         plt.ylabel("u(x, t_end)")
         plt.title("Baseline vs Hybrid final state")
         plt.tight_layout()
-        plt.savefig("comparison.png", dpi=150)
-        print("Saved plot to comparison.png")
+        plt.savefig("results/visualizations/comparison.png", dpi=150)
+        print("Saved plot to results/visualizations/comparison.png")
     except Exception as e:
         print("Plotting skipped:", e)
 

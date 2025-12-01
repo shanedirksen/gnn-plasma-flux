@@ -17,6 +17,9 @@ checkpoints/
 *.pth
 *.pt
 
+# Results
+results/
+
 # Logs
 logs/
 *.log
