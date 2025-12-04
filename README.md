@@ -2,7 +2,7 @@
 
 This repo is a minimal working scaffold for a **hybrid PDE solver**:
 we keep a classical finite-volume time integrator, but replace the
-numerical flux function with a small **graph neural network**.
+numerical flux function with a small **graph neural network**..
 
 Right now, the PDE is a simple 1D linear advection equation, but the
 scaffolding (data shapes, graph builder, GNN interface, hybrid loop)
