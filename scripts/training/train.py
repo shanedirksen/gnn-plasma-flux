@@ -1,4 +1,8 @@
 # train.py
+import sys
+from pathlib import Path
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 import os
 import numpy as np
 import torch
@@ -6,8 +10,8 @@ from torch.utils.data import Dataset, DataLoader
 import torch.nn as nn
 import torch.optim as optim
 
-from graph_constructor import build_chain_graph
-from flux_gnn import FluxGNN
+from src.graph_constructor import build_chain_graph
+from src.flux_gnn import FluxGNN
 
 
 class FluxDataset(Dataset):

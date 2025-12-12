@@ -8,14 +8,14 @@ class FluxGNN(nn.Module):
     Lightweight message-passing GNN that predicts fluxes on edges of a 1D chain graph.
     """
 
-    def __init__(self, in_features=2, hidden_dim=32, num_layers=2):
+    def __init__(self, input_dim=2, hidden_dim=32, num_layers=2):
         super().__init__()
-        self.in_features = in_features
+        self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
 
         self.input_mlp = nn.Sequential(
-            nn.Linear(in_features, hidden_dim),
+            nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
         )
 

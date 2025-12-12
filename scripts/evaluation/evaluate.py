@@ -1,7 +1,11 @@
 # evaluate.py
+import sys
+from pathlib import Path
+# Add project root to path
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 import numpy as np
-from baseline_solver import BaselineSolver
-from hybrid_solver import HybridSolver
+from src.baseline_solver import BaselineSolver
+from src.hybrid_solver import HybridSolver
 
 
 def main():

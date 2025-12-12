@@ -4,7 +4,11 @@ __pycache__/
 *.so
 *.egg-info/
 venv/
+.venv/
 env/
+
+# Documentation (LaTeX, presentations, etc.)
+docs/
 
 # Data
 data/
@@ -26,6 +30,13 @@ logs/
 
 # Jupyter
 .ipynb_checkpoints
+# Note: notebooks/ directory is tracked (contains team member work)
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # OS
 .DS_Store

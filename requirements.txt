@@ -1,8 +1,21 @@
-numpy
-scipy
-matplotlib
-torch
-torch-geometric
-pyyaml
-tqdm
-h5py
+# GNN Plasma Flux - Requirements
+# Python 3.9+
+
+# Core scientific computing
+numpy==1.26.4
+scipy==1.16.2
+matplotlib==3.10.7
+
+# Deep learning
+torch==2.7.1
+torch-geometric==2.7.0
+
+# Utilities
+tqdm==4.67.1
+pillow==12.0.0
+
+# Optional (if using YAML configs)
+pyyaml==6.0.3
+
+# Optional (if saving to HDF5)
+h5py==3.15.1
